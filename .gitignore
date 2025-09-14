@@ -1,0 +1,22 @@
+# Ambiente virtual
+.venv/
+env/
+
+# Cache e arquivos temporários
+__pycache__/
+*.pyc
+.DS_Store
+
+# Dados e arquivos grandes
+data/
+*.csv
+*.parquet
+*.feather
+*.zip
+*.tar
+*.gz
+
+# Outputs de modelos/treino
+outputs/
+models/
+checkpoints/
