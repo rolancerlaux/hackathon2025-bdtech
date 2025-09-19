@@ -21,18 +21,18 @@ Este repositório contém a solução desenvolvida para o **Desafio Técnico –
 📦 hackathon-forecast-bigdata
  ```bash
  ├── data/
- │ ├── raw/ # Dados brutos
- │ └── processed/ # Dados tratados para modelagem
+ │   ├── dataset_consolidado.parquet        # dataset de entrada (ajuste nome conforme arquivo disponível)
+ │   └── processed/                         # saídas geradas pelo pipeline (weekly/train/valid)
  ├── notebooks/
- │ ├── 01_eda.ipynb # Análise exploratória (EDA)
- │ ├── 02_preprocessing.ipynb # Limpeza e transformação dos dados
- │ ├── 03_modeling.ipynb # Treinamento e avaliação de modelos
- │ ├── 04_forecast.ipynb # Previsões finais
+ │   ├── 01_eda.ipynb # Análise exploratória (EDA)
+ │   ├── 02_preprocessing.ipynb # Limpeza e transformação dos dados
+ │   ├── 03_modeling.ipynb # Treinamento e avaliação de modelos
+ │   ├── 04_forecast.ipynb # Previsões finais
  ├── src/
- │ ├── data_preprocessing.py # Funções de tratamento de dados
- │ ├── feature_engineering.py # Criação de features
- │ ├── models.py # Implementação e treinamento de modelos
- │ └── utils.py # Funções auxiliares
+ │   ├── data_preprocessing.py # Funções de tratamento de dados
+ │   ├── feature_engineering.py # Criação de features
+ │   ├── models.py # Implementação e treinamento de modelos
+ │   └── utils.py # Funções auxiliares
  ├── requirements.txt # Dependências do projeto
  └── README.md # Documentação
  ```
@@ -71,13 +71,29 @@ Este repositório contém a solução desenvolvida para o **Desafio Técnico –
 
 4. Execute os notebooks na pasta notebooks/ para reproduzir a solução.
 
+### Pipeline CLI (dados → modelo → previsões)
+
+Após instalar as dependências, execute o pipeline completo com os scripts em `src/`:
+
+```bash
+python -m src.pipeline prepare --input data/consolidado.parquet --outdir data/processed
+python -m src.pipeline train --weekly data/processed/weekly.parquet --out models/lgbm_cut1128.pkl
+python -m src.pipeline evaluate --weekly data/processed/weekly.parquet --out outputs/eval_valid_dec2022.csv
+python -m src.pipeline forecast --weekly data/processed/weekly.parquet --out outputs/forecast_jan_2023.parquet --format parquet
+```
+
+- `prepare`: agrega o consolidado em painel semanal, cria features e salva `weekly/train/valid` em `data/processed/`. Ajuste o nome do arquivo usado em `--input` se estiver diferente (ex.: `data/dataset_consolidado.parquet`).
+- `train`: treina o LightGBM (ou versão two-stage) e salva o modelo em `models/`.
+- `evaluate`: calcula WMAPE na validação de dez/2022 para a baseline selecionada.
+- `forecast`: gera as previsões para as 5 semanas de janeiro/2023 em formato Parquet (`--format parquet`).
+
 ## 📊 Métricas de avaliação
 
-Métricas utilizadas: **RMSE, MAPE e R²**.
+Métricas utilizadas: **WMAPE, RMSE, MAPE e R²**.
 
 O modelo final será avaliado com base na acurácia das previsões para as semanas de janeiro/2023.
 
 ## 👥 Equipe
 
-- Rodrigo ...
+- Rodrigo Lopes de Faria
 - Rozana da Malta Martins
