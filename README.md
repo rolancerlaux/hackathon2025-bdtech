@@ -76,8 +76,16 @@ Este repositório contém a solução desenvolvida para o **Desafio Técnico –
 Após instalar as dependências, execute o pipeline completo com os scripts em `src/`:
 
 ```bash
-python -m src.pipeline prepare --input data/consolidado.parquet --outdir data/processed
-python -m src.pipeline train --weekly data/processed/weekly.parquet --out models/lgbm_cut1128.pkl
+python -m src.pipeline prepare --input data/dataset_consolidado.parquet --outdir data/processed
+
+python -m src.pipeline train \
+  --weekly data/processed/weekly.parquet \
+  --out models/lgbm_twostage_recencia.pkl \
+  --history-weeks 52 \
+  --decay-weeks 26 \
+  --two-stage \
+  --tau 0.35
+
 python -m src.pipeline evaluate --weekly data/processed/weekly.parquet --out outputs/eval_valid_dec2022.csv
 python -m src.pipeline forecast --weekly data/processed/weekly.parquet --out outputs/forecast_jan_2023.parquet --format parquet
 ```
@@ -89,7 +97,7 @@ python -m src.pipeline forecast --weekly data/processed/weekly.parquet --out out
 
 ## 📊 Métricas de avaliação
 
-Métricas utilizadas: **WMAPE, RMSE, MAPE e R²**.
+Métricas utilizadas: **WMAPE**.
 
 O modelo final será avaliado com base na acurácia das previsões para as semanas de janeiro/2023.
 
