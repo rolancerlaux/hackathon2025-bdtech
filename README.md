@@ -87,7 +87,15 @@ python -m src.pipeline train \
   --tau 0.35
 
 python -m src.pipeline evaluate --weekly data/processed/weekly.parquet --out outputs/eval_valid_dec2022.csv
-python -m src.pipeline forecast --weekly data/processed/weekly.parquet --out outputs/forecast_jan_2023.parquet --format parquet
+source .venv/bin/activate
+source .venv/bin/activate
+python -m src.pipeline forecast-ml \
+  --weekly data/processed/weekly.parquet \
+  --model models/lgbm_twostage_recencia.pkl \
+  --out outputs/forecast_jan_ml_active3.parquet \
+  --format parquet \
+  --only-active \
+  --active-window 3
 ```
 
 - `prepare`: agrega o consolidado em painel semanal, cria features e salva `weekly/train/valid` em `data/processed/`. Ajuste o nome do arquivo usado em `--input` se estiver diferente (ex.: `data/dataset_consolidado.parquet`).
