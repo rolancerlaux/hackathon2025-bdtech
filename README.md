@@ -87,8 +87,7 @@ python -m src.pipeline train \
   --tau 0.35
 
 python -m src.pipeline evaluate --weekly data/processed/weekly.parquet --out outputs/eval_valid_dec2022.csv
-source .venv/bin/activate
-source .venv/bin/activate
+
 python -m src.pipeline forecast-ml \
   --weekly data/processed/weekly.parquet \
   --model models/lgbm_twostage_recencia.pkl \
