@@ -337,8 +337,7 @@ def forecast_jan_ml(
         if artefact.get("type") == "two_stage":
             proba = artefact["clf"].predict_proba(feats)[:, 1]
             qty_hat = np.maximum(0.0, artefact["reg"].predict(feats))
-            tau = artefact.get("tau", 0.5)
-            preds = np.where(proba >= tau, qty_hat, 0.0)
+            preds = proba * qty_hat
         else:
             preds = np.maximum(0.0, artefact["model"].predict(feats))
 
