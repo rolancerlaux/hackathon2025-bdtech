@@ -81,10 +81,10 @@ python -m src.pipeline prepare --input data/dataset_consolidado.parquet --outdir
 python -m src.pipeline train \
   --weekly data/processed/weekly.parquet \
   --out models/lgbm_twostage_recencia.pkl \
-  --history-weeks 52 \
-  --decay-weeks 26 \
+  --history-weeks 26 \
+  --decay-weeks 13 \
   --two-stage \
-  --tau 0.35
+  --tau 0.1
 
 python -m src.pipeline evaluate --weekly data/processed/weekly.parquet --out outputs/eval_valid_dec2022.csv
 
